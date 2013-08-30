@@ -1,0 +1,14 @@
+{
+  "output" : "text/csv",
+  "id": "normalize-csv",
+  "title": {
+    "fr": "Normalize des données tabulaires textuel (CSV, TSV, etc.)",
+    "en": "Normalize any type of data that looks like CSV, TSC, etc."
+  },
+  "description": {
+    "fr" : "Transforme des données qui ressemblent à du CSV, en CSV normalisé suivant le standard RFC 4180",
+    "en" : "Transformed data with character-separated values to RFC 4180 standard"
+  },
+  "parameters" : {
+  }
+}
