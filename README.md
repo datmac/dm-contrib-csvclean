@@ -1,2 +1,2 @@
-mill-contrib-normalize
+dm-contrib-normalize
 ======================

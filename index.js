@@ -19,35 +19,39 @@ function Command(options)
 Command.prototype = Object.create(
   Transform.prototype, { constructor: { value: Command }});
 
+Command.prototype.parse = function (rows) {
+  var self = this;
+  self.push(rows.map(function (row) {
+      return CSV.stringify(row);
+    }
+  ).join(''));
+}
 Command.prototype._transform = function (chunk, encoding, done) {
-  var that = this;
+  var self = this;
 
-  that.buffer += chunk;
-
-  if (that.begin) {
-    that.begin = false;
-    that.separator = CSV.detect(that.buffer);
-    that.emit('begin');
+  if (self.begin) {
+    self.begin = false;
+    self.separator = CSV.detect(chunk.toString());
+    self.emit('begin');
   }
-
-  var r, s = 0;
-
-  while (r = CSV.read(that.buffer.slice(s), this.separator, function (row) {
-        var str = CSV.stringify(row);
-        if (str.trim() !== '') {
-          that.push(str);
-        }
-      }
-    )
-  ) {
-    s += r;
-  }
-  that.buffer = that.buffer.slice(s);
+  self.buffer = self.buffer.concat(chunk.toString());
+  var x = CSV.readChunk(self.buffer, self.separator, function (rows) {
+      self.parse(rows);
+    }
+  );
+  done();
+  self.buffer = self.buffer.slice(x);
 }
 Command.prototype.end = function () {
-  var that = this;
-  that.emit('end');
+  var self = this;
+
+  CSV.readAll(self.buffer, self.separator, function (rows) {
+      self.parse(rows);
+    }
+  );
+  self.emit('end');
 };
+
 
 module.exports = function (options, si) {
   var cmd = new Command(options);

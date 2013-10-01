@@ -10,5 +10,14 @@
     "en" : "Transformed data with character-separated values to RFC 4180 standard"
   },
   "parameters" : {
-  }
+  },
+  "prepend" : [
+    {
+      "action" : "normalize",
+      "form" : {
+      }
+    }
+  ],
+  "append" : [ ]
+
 }
